@@ -9,32 +9,49 @@ type alias Card =
 
 newCollection : Card -> Set Card
 newCollection card =
-    Debug.todo "Please implement newCollection"
+    Set.singleton card
 
 
 addCard : Card -> Set Card -> ( Bool, Set Card )
 addCard card collection =
-    Debug.todo "Please implement addCard"
+    Set.insert card collection
+        |> Tuple.pair (Set.member card collection)
 
 
 tradeCard : Card -> Card -> Set Card -> ( Bool, Set Card )
 tradeCard yourCard theirCard collection =
-    Debug.todo "Please implement tradeCard"
+    let
+        isTradeable =
+            (yourCard /= theirCard)
+                |> (&&) (Set.member theirCard collection)
+                >> not
+                |> (&&) (Set.member yourCard collection)
+
+        finalCollection =
+            collection
+                |> Set.remove yourCard
+                |> Set.insert theirCard
+    in
+    ( isTradeable, finalCollection )
 
 
 removeDuplicates : List Card -> List Card
 removeDuplicates cards =
-    Debug.todo "Please implement removeDuplicates"
+    cards
+        |> Set.fromList
+        |> Set.toList
 
 
 extraCards : Set Card -> Set Card -> Int
 extraCards yourCollection theirCollection =
-    Debug.todo "Please implement extraCards"
+    Set.diff yourCollection theirCollection
+        |> Set.toList
+        |> List.length
 
 
 boringCards : List (Set Card) -> List Card
 boringCards collections =
-    Debug.todo "Please implement boringCards"
+    Debug.todo "Please implement totalCards"
 
 
 totalCards : List (Set Card) -> Int
