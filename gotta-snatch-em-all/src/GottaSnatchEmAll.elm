@@ -1,6 +1,7 @@
 module GottaSnatchEmAll exposing (..)
 
-import Set exposing (Set)
+import List exposing (singleton)
+import Set exposing (Set, intersect)
 
 
 type alias Card =
@@ -51,7 +52,16 @@ extraCards yourCollection theirCollection =
 
 boringCards : List (Set Card) -> List Card
 boringCards collections =
-    Debug.todo "Please implement totalCards"
+    case collections of
+        [] ->
+            []
+
+        firstClt :: secondClt :: rest ->
+            Set.intersect firstClt secondClt
+                |> (\set -> boringCards (set :: rest))
+
+        [ singleClt ] ->
+            Set.toList singleClt
 
 
 totalCards : List (Set Card) -> Int
