@@ -66,9 +66,20 @@ boringCards collections =
 
 totalCards : List (Set Card) -> Int
 totalCards collections =
-    Debug.todo "Please implement totalCards"
+    collections
+        |> List.concatMap Set.toList
+        |> removeDuplicates
+        |> List.length
 
 
 splitShinyCards : Set Card -> ( List Card, List Card )
 splitShinyCards collection =
-    Debug.todo "Please implement splitShinyCards"
+    let
+        isShiny : Card -> Bool
+        isShiny card =
+            card
+                |> String.contains "Shiny"
+    in
+    collection
+        |> Set.partition isShiny
+        |> (\( a, b ) -> ( Set.toList a, Set.toList b ))
