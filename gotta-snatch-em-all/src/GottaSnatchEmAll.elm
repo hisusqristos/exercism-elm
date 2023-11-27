@@ -66,10 +66,19 @@ boringCards collections =
 
 totalCards : List (Set Card) -> Int
 totalCards collections =
-    collections
-        |> List.concatMap Set.toList
-        |> removeDuplicates
-        |> List.length
+    let
+        allCards : List (Set Card) -> Set Card
+        allCards cardSets =
+            case cardSets of
+                [] ->
+                    Set.empty
+
+                first :: rest ->
+                    first
+                        |> Set.union (allCards rest)
+    in
+    allCards collections
+        |> Set.size
 
 
 splitShinyCards : Set Card -> ( List Card, List Card )
