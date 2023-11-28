@@ -1,0 +1,44 @@
+module Allergies exposing (Allergy(..), isAllergicTo, toBinary, toList)
+
+
+type Allergy
+    = Eggs
+    | Peanuts
+    | Shellfish
+    | Strawberries
+    | Tomatoes
+    | Chocolate
+    | Pollen
+    | Cats
+
+
+allergyList : List Allergy
+allergyList =
+    [ Eggs, Peanuts, Shellfish, Strawberries, Tomatoes, Chocolate, Pollen, Cats ]
+
+
+isAllergicTo : Allergy -> Int -> Bool
+isAllergicTo allergy score =
+    toList score
+        |> List.member allergy
+
+
+toList : Int -> List Allergy
+toList score =
+    toBinary score
+        |> List.map2 Tuple.pair allergyList
+        |> List.filter (Tuple.second >> (==) 1)
+        |> List.map Tuple.first
+
+
+toBinary : Int -> List Int
+toBinary n =
+    case n of
+        0 ->
+            [ 0 ]
+
+        1 ->
+            [ n ]
+
+        _ ->
+            remainderBy 2 n :: toBinary (n // 2)
