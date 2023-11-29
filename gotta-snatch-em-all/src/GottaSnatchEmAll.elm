@@ -1,7 +1,7 @@
 module GottaSnatchEmAll exposing (..)
 
-import List exposing (singleton)
-import Set exposing (Set, intersect)
+import List
+import Set exposing (Set)
 
 
 type alias Card =
@@ -9,45 +9,39 @@ type alias Card =
 
 
 newCollection : Card -> Set Card
-newCollection card =
-    Set.singleton card
+newCollection =
+    Set.singleton
 
 
 addCard : Card -> Set Card -> ( Bool, Set Card )
 addCard card collection =
-    Set.insert card collection
-        |> Tuple.pair (Set.member card collection)
+    ( Set.member card collection, Set.insert card collection )
 
 
 tradeCard : Card -> Card -> Set Card -> ( Bool, Set Card )
 tradeCard yourCard theirCard collection =
     let
         isTradeable =
-            (yourCard /= theirCard)
-                |> (&&) (Set.member theirCard collection)
-                >> not
-                |> (&&) (Set.member yourCard collection)
+            (&&) (not (Set.member theirCard collection))
+                << (&&) (Set.member yourCard collection)
+                << (/=) theirCard
 
-        finalCollection =
-            collection
-                |> Set.remove yourCard
-                |> Set.insert theirCard
+        final =
+            Set.remove yourCard >> Set.insert theirCard
     in
-    ( isTradeable, finalCollection )
+    ( isTradeable yourCard, final collection )
 
 
 removeDuplicates : List Card -> List Card
-removeDuplicates cards =
-    cards
-        |> Set.fromList
-        |> Set.toList
+removeDuplicates =
+    Set.fromList >> Set.toList
 
 
 extraCards : Set Card -> Set Card -> Int
-extraCards yourCollection theirCollection =
-    Set.diff yourCollection theirCollection
-        |> Set.toList
-        |> List.length
+extraCards yourCollection =
+    Set.diff yourCollection
+        >> Set.toList
+        >> List.length
 
 
 boringCards : List (Set Card) -> List Card
@@ -65,7 +59,7 @@ boringCards collections =
 
 
 totalCards : List (Set Card) -> Int
-totalCards collections =
+totalCards =
     let
         allCards : List (Set Card) -> Set Card
         allCards cardSets =
@@ -77,18 +71,15 @@ totalCards collections =
                     first
                         |> Set.union (allCards rest)
     in
-    allCards collections
-        |> Set.size
+    Set.size << allCards
 
 
 splitShinyCards : Set Card -> ( List Card, List Card )
-splitShinyCards collection =
+splitShinyCards =
     let
         isShiny : Card -> Bool
-        isShiny card =
-            card
-                |> String.contains "Shiny"
+        isShiny =
+            String.contains "Shiny"
     in
-    collection
-        |> Set.partition isShiny
-        |> (\( a, b ) -> ( Set.toList a, Set.toList b ))
+    Set.partition isShiny
+        >> Tuple.mapBoth Set.toList Set.toList
