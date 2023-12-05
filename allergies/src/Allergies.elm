@@ -19,8 +19,7 @@ allergyList =
 
 isAllergicTo : Allergy -> Int -> Bool
 isAllergicTo allergy score =
-    toList score
-        |> List.member allergy
+    List.member allergy <| toList score
 
 
 toList : Int -> List Allergy
