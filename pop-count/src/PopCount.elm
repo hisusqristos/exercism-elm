@@ -3,11 +3,11 @@ module PopCount exposing (eggCount)
 
 eggCount : Int -> Int
 eggCount =
-    noZeroBinary >> List.length
+    toBinary >> List.sum
 
 
-noZeroBinary : Int -> List Int
-noZeroBinary n =
+toBinary : Int -> List Int
+toBinary n =
     case n of
         0 ->
             []
@@ -16,13 +16,4 @@ noZeroBinary n =
             [ 1 ]
 
         _ ->
-            let
-                egg =
-                    case remainderBy 2 n of
-                        1 ->
-                            [ 1 ]
-
-                        _ ->
-                            []
-            in
-            egg ++ noZeroBinary (n // 2)
+            remainderBy 2 n :: toBinary (n // 2)
