@@ -16,4 +16,13 @@ noZeroBinary n =
             [ 1 ]
 
         _ ->
-            remainderBy 2 n :: noZeroBinary (n // 2)
+            let
+                egg =
+                    case remainderBy 2 n of
+                        1 ->
+                            [ 1 ]
+
+                        _ ->
+                            []
+            in
+            egg ++ noZeroBinary (n // 2)
