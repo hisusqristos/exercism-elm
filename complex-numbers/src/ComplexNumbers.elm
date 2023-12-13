@@ -81,4 +81,4 @@ div ( a, b ) ( c, d ) =
 
 exp : Complex -> Complex
 exp ( a, b ) =
-    (e ^ a) * (cos b + i * sin b) |> fromReal
+    ( (e ^ a) * cos b, (e ^ a) * sin b )
